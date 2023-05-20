@@ -97,7 +97,7 @@ if (process.env.NODE_ENV == "production") {
   });
 }
 
-/* MONGOOSE SETUP */
+/* _MONGOOSE SETUP_*/
 const PORT = process.env.PORT || 4000;
 mongoose
   .connect(process.env.MONGO_URI, {
