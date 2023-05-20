@@ -1,26 +1,18 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import bodyParser from "body-parser";
 import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import fs from "fs";
+import helmet from "helmet";
+import mongoose from "mongoose";
+import morgan from "morgan";
+import multer from "multer";
 import path from "path";
-import socketServer from "./socketServer.js";
-import posts from "./routes/posts.js";
-import users from "./routes/users.js";
+import { fileURLToPath } from "url";
 import comments from "./routes/comments.js";
 import messages from "./routes/messages.js";
-import bodyParser from "body-parser";
-import multer from "multer";
-import helmet from "helmet";
-import morgan from "morgan";
-import http from "http";
-import { Server } from 'socket.io';
-import { authSocket } from "./socketServer.js";
-import { fileURLToPath } from "url";
-import { register } from "./controllers/userControllers.js";
-import { createPost } from "./controllers/postControllers.js";
-import { verifyToken } from "./middleware/auth.js";
-import { getDate, getHours } from "date-fns";
-import fs from "fs";
+import posts from "./routes/posts.js";
+import users from "./routes/users.js";
 
 
 /* CONFIGURATIONS */
@@ -108,9 +100,10 @@ if (process.env.NODE_ENV == "production") {
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 4000;
 mongoose
-  .connect(process.env.MONGO_URI, {
+  .connect(`${process.env.MONGO_URI}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => {
     if (process.env.NODE_ENV == "production") {
