@@ -22,28 +22,21 @@ import { verifyToken } from "./middleware/auth.js";
 import { getDate, getHours } from "date-fns";
 import fs from "fs";
 
+
+/* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
 const app = express();
-
-const httpServer = http.createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: ["http://localhost:3000", "https://cooltrainer.herokuapp.com"],
-  },
-});
-
-io.use(authSocket);
-io.on("connection", (socket) => socketServer(socket));
-
-
 app.use(express.json());
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(morgan("common"));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 //app.use(morgan("common"));
 //app.use(bodyParser.json({ limit: "30mb", extended: true }));
 //app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
@@ -102,31 +95,30 @@ app.use("/api/users", users);
 app.use("/api/comments", comments);
 app.use("/api/messages", messages);
 
-/* MONGOOSE SETUP */
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: "true",
-})
-mongoose.connection.on("error", err => {
-  console.log("err", err)
-})
-mongoose.connection.on("connected", (err, res) => {
-  console.log("mongoose is connected")
-})
-
-const PORT = process.env.PORT
-
-//Production / Development
-if (process.env.NODE_ENV == "production") {
-  app.listen(PORT, '0.0.0.0', () => console.log(`Server Port: ${PORT}`));
-}
-else{
-  app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-}
 
 if (process.env.NODE_ENV == "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
+
 
   app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
+
+/* MONGOOSE SETUP */
+const PORT = process.env.PORT || 4000;
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    if (process.env.NODE_ENV == "production") {
+      app.listen(PORT, '0.0.0.0', () => console.log(`Server Port: ${PORT}`));
+    }
+    else{
+      app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    }
+    
+  })
+  .catch((error) => console.log(`${error} did not connect`));
