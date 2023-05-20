@@ -114,6 +114,7 @@ mongoose.connection.on("connected", (err, res) => {
 })
 const PORT = process.env.PORT
 
+//Production / Development
 if (process.env.NODE_ENV == "production") {
   app.listen(PORT, '0.0.0.0', () => console.log(`Server Port: ${PORT}`));
 }
