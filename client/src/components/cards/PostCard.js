@@ -194,7 +194,7 @@ const PostCard = (props) => {
                 height="auto"
                 alt="post"
                 style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-                src={`${BASE_URL}/assets/${post.picturePath}`}
+                src={`${BASE_URL}assets/${post.picturePath}`}
               />
             )}
             
