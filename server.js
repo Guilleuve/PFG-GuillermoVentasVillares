@@ -113,9 +113,13 @@ mongoose.connection.on("connected", (err, res) => {
   console.log("mongoose is connected")
 })
 const PORT = process.env.PORT
-app.listen(PORT, () => {
-  console.log(`app is listening to PORT ${PORT}`)
-})
+
+if (process.env.NODE_ENV == "production") {
+  app.listen(PORT, '0.0.0.0', () => console.log(`Server Port: ${PORT}`));
+}
+else{
+  app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+}
 
 if (process.env.NODE_ENV == "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
