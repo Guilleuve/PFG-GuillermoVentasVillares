@@ -264,7 +264,7 @@ const RegisterPage = () => {
             multiple
             options={sports}
             getOptionLabel={(sports) => sports.label}
-            renderInput={(params) => <TextField {...params} label="Experto" />}
+            renderInput={(params) => <TextField {...params} label="Principiante" />}
             value={principiante}
             onChange={handleSelectChangePrincipiante}
           />
