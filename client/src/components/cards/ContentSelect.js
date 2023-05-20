@@ -1,5 +1,5 @@
 import { MenuItem, Select, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import HorizontalStack from "../_more_components/HorizontalStack";
 
 const ContentSelect = () => {

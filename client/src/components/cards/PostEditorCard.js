@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Button,
   Card,
   Divider,
@@ -6,25 +7,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
-import { Autocomplete } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import { Box } from "@mui/system";
+import { BASE_URL } from "config";
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 import { useNavigate } from "react-router-dom";
 import { createPost } from "../../api/posts";
 import { isLoggedIn } from "../../helpers/authHelper";
 import ErrorAlert from "../_more_components/ErrorAlert";
 import HorizontalStack from "../_more_components/HorizontalStack";
 import UserImage from "../_more_components/UserImage";
-import { format } from 'date-fns';
-import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
-import { es } from 'date-fns/locale';
-import { motion } from "framer-motion";
-import { BASE_URL } from "config";
 
 const PostEditorCard = () => {
   const navigate = useNavigate();

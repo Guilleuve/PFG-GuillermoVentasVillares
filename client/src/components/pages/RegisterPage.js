@@ -9,10 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from "@mui/material/MenuItem";
-import Select from '@mui/material/Select';
 import { Box } from "@mui/system";
+import { BASE_URL } from "config";
 import { Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +19,6 @@ import { register } from "../../api/users";
 import { loginUser } from "../../helpers/authHelper";
 import Copyright from "../_more_components/Copyright";
 import ErrorAlert from "../_more_components/ErrorAlert";
-import { BASE_URL } from "config";
 
 const RegisterPage = () => {
   const navigate = useNavigate();

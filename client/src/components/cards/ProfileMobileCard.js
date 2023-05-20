@@ -12,9 +12,9 @@ import { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { MdCancel } from "react-icons/md";
 import { isLoggedIn } from "../../helpers/authHelper";
-import ContentUpdateEditor from "./ContentUpdateEditor";
 import HorizontalStack from "../_more_components/HorizontalStack";
 import UserAvatar from "../_more_components/UserImage";
+import ContentUpdateEditor from "./ContentUpdateEditor";
 
 const MobileProfile = (props) => {
   const [user, setUser] = useState(null);

@@ -1,5 +1,5 @@
 import { Box, Button, Stack, TextField } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const ContentUpdateEditor = (props) => {
   const [content, setContent] = useState(props.originalContent);

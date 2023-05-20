@@ -5,6 +5,7 @@ import {
   Stack,
   Typography
 } from "@mui/material";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdRefresh } from "react-icons/md";
@@ -13,7 +14,6 @@ import { getRandomUsers } from "../../api/users";
 import HorizontalStack from "../_more_components/HorizontalStack";
 import Loading from "../_more_components/Loading";
 import UserImage from "../_more_components/UserImage";
-import { motion } from "framer-motion";
 
 const FindUsersCard = () => {
   const [loading, setLoading] = useState(true);

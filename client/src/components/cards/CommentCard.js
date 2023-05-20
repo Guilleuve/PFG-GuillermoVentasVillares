@@ -9,11 +9,11 @@ import Moment from "react-moment";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteComment, updateComment } from "../../api/posts";
 import { isLoggedIn } from "../../helpers/authHelper";
-import ContentDetails from "./ContentDetails";
-import ContentUpdateEditor from "./ContentUpdateEditor";
 import HorizontalStack from "../_more_components/HorizontalStack";
 import Markdown from "../_more_components/Markdown";
 import CommentEditor from "./CommentEditorCard";
+import ContentDetails from "./ContentDetails";
+import ContentUpdateEditor from "./ContentUpdateEditor";
 
 const CommentCard = (props) => {
   const theme = useTheme();

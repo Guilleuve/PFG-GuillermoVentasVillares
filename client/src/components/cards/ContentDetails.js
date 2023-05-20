@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
-import { formatDistanceToNow } from 'date-fns';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import es from 'date-fns/locale/es';
 import { Link } from "react-router-dom";
 import HorizontalStack from "../_more_components/HorizontalStack";

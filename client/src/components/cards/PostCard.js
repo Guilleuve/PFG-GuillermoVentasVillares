@@ -1,32 +1,31 @@
+import TextsmsIcon from '@mui/icons-material/Textsms';
 import {
   Card,
   IconButton,
   Typography,
   useTheme,
 } from "@mui/material";
-import TextsmsIcon from '@mui/icons-material/Textsms';
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import { BASE_URL } from "config";
+import { useState } from "react";
 import { AiFillCheckCircle, AiFillEdit } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { deletePost, joinPost, unjoinPost, likePost, unlikePost, updatePost } from "../../api/posts";
+import { deletePost, joinPost, likePost, unjoinPost, unlikePost, updatePost } from "../../api/posts";
 import { isLoggedIn } from "../../helpers/authHelper";
 import ContentDetails from "./ContentDetails";
-import { BASE_URL } from "config";
 
+import HorizontalStack from "../_more_components/HorizontalStack";
 import LikeBox from "../_more_components/LikeBox";
 import PostContentBox from "./PostContentBox";
-import HorizontalStack from "../_more_components/HorizontalStack";
 
-import {} from "react-icons/ai";
-import ContentUpdateEditor from "./ContentUpdateEditor";
+import { } from "react-icons/ai";
 import Markdown from "../_more_components/Markdown";
+import ContentUpdateEditor from "./ContentUpdateEditor";
 
-import "./postCard.css";
-import { MdCancel } from "react-icons/md";
 import { BiTrash } from "react-icons/bi";
+import { MdCancel } from "react-icons/md";
+import "./postCard.css";
 
-import JoinBox from "components/_more_components/JoinBox";
 import { motion } from "framer-motion";
 
 const PostCard = (props) => {

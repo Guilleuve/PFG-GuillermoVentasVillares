@@ -1,8 +1,8 @@
 import { Stack } from "@mui/material";
+import { motion } from "framer-motion";
 import FindUsers from "../cards/FindUsersCard";
 import Footer from "../cards/FooterCard";
 import TopPosts from "../cards/TopPostsCard";
-import { motion } from "framer-motion";
 
 const SidebarHome = () => {
   return (

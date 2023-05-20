@@ -1,6 +1,9 @@
 import { Button, MenuItem, Select, Stack, Typography } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Box } from "@mui/system";
+import { getFollowing } from "api/users";
+import { format, isToday } from "date-fns";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPosts, getUserLikedPosts } from "../../api/posts";
@@ -8,10 +11,6 @@ import { isLoggedIn } from "../../helpers/authHelper";
 import HorizontalStack from "../_more_components/HorizontalStack";
 import Loading from "../_more_components/Loading";
 import PostCard from "../cards/PostCard";
-import { motion } from "framer-motion";
-import { format } from "date-fns";
-import { isToday } from "date-fns";
-import { getFollowing, getFollowingIds } from "api/users";
 
 const PostsView = (props) => {
   const [posts, setPosts] = useState([]);

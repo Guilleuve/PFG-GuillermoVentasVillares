@@ -1,5 +1,5 @@
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-import { Card, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import "react-icons/md";
 import { getPosts } from "../../api/posts";

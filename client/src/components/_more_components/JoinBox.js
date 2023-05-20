@@ -1,10 +1,5 @@
-import { IconButton, Button, Typography, useTheme, Divider } from "@mui/material";
-import React, { useState } from "react";
-import {
-  CheckCircleOutlineOutlined,
-  CheckCircleOutlined,
-} from "@mui/icons-material";
-import { IconContext } from "react-icons/lib";
+import { Button, Divider, Typography, useTheme } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { isLoggedIn } from "../../helpers/authHelper";
 import HorizontalStack from "./HorizontalStack";

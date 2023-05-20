@@ -1,5 +1,6 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getComments } from "../../api/posts";
@@ -7,7 +8,6 @@ import HorizontalStack from "../_more_components/HorizontalStack";
 import Loading from "../_more_components/Loading";
 import Comment from "../cards/CommentCard";
 import CommentEditor from "../cards/CommentEditorCard";
-import { motion } from "framer-motion";
 
 const CommentsView = () => {
   const [comments, setComments] = useState(null);

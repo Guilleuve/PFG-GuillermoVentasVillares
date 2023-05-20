@@ -1,23 +1,15 @@
-import { Stack, Divider } from "@mui/material";
-import {
-  Box,
-  Card,
-  Typography,
-  Button,
-} from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import HorizontalStack from "components/_more_components/HorizontalStack";
-import UserImage from "components/_more_components/UserImage";
-import Loading from "components/_more_components/Loading";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getFollowers, getFollowing } from "api/users";
-import { isLoggedIn } from "helpers/authHelper";
-import { follow, unfollow } from "api/users";
+import { Box, Button, Card, Stack, Typography } from "@mui/material";
+import { follow, getFollowers, getFollowing, unfollow } from "api/users";
 import ErrorAlert from "components/_more_components/ErrorAlert";
+import HorizontalStack from "components/_more_components/HorizontalStack";
+import Loading from "components/_more_components/Loading";
+import UserImage from "components/_more_components/UserImage";
 import { motion } from "framer-motion";
+import { isLoggedIn } from "helpers/authHelper";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const SidebarProfile = (props) => {
   const { preview } = props;

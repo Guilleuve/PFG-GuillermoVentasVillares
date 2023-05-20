@@ -19,7 +19,7 @@ const createPost = async (req, res) => {
     /*
     if (cooldown.has(userId)) {
       throw new Error(
-        "You are posting too frequently. Please try again shortly."
+        ""
       );
     }
     */

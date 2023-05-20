@@ -1,35 +1,29 @@
 import { useTheme } from "@emotion/react";
-import { LocationOnOutlined, PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { LocationOnOutlined } from "@mui/icons-material";
 import {
+  Autocomplete,
   Button,
   Card,
   Divider,
   Stack,
-  Typography,
-  Autocomplete,
-  TextField
+  TextField,
+  Typography
 } from "@mui/material";
+import Alert from '@mui/material/Alert';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import Grid from "@mui/material/Grid";
 import { Box } from "@mui/system";
+import { getUser, updateUser } from "api/users";
+import ErrorAlert from "components/_more_components/ErrorAlert";
+import { BASE_URL } from "config";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { useNavigate, useParams } from "react-router-dom";
 import { isLoggedIn, logoutUser } from "../../helpers/authHelper";
-import ContentUpdateEditor from "./ContentUpdateEditor";
 import HorizontalStack from "../_more_components/HorizontalStack";
 import Loading from "../_more_components/Loading";
 import UserImage from "../_more_components/UserImage";
-import { follow } from "api/users";
-import ErrorAlert from "components/_more_components/ErrorAlert";
-import { motion } from "framer-motion";
-import { getUser, updateUser } from "api/users";
-import Grid from "@mui/material/Grid";
-import Alert from '@mui/material/Alert';
-import { BASE_URL } from "config";
 
 const ProfileCard = (props) => {
   const navigate = useNavigate();

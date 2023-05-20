@@ -5,16 +5,15 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { getUsersJoinedPost } from "api/posts";
+import { getUsersJoinedPost, joinPost, unjoinPost } from "api/posts";
 import HorizontalStack from "components/_more_components/HorizontalStack";
+import JoinBox from "components/_more_components/JoinBox";
 import Loading from "components/_more_components/Loading";
 import UserImage from "components/_more_components/UserImage";
+import { motion } from "framer-motion";
 import { isLoggedIn } from "helpers/authHelper";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import JoinBox from "components/_more_components/JoinBox";
-import { joinPost, unjoinPost } from "api/posts";
-import { motion } from "framer-motion";
 
 const PostJoinedCard = (props) => {
   const { preview } = props;
