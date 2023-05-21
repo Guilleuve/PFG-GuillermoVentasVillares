@@ -6,7 +6,8 @@ import "react-icons/bi";
 import "react-icons/bs";
 import "react-icons/md";
 import "react-router-dom";
-import CookieConsent from "react-cookie-consent";
+import { useCookies } from 'react-cookie';
+import React, { useState, useEffect } from 'react';
 
 import {
   BrowserRouter,
@@ -28,11 +29,32 @@ import { initiateSocketConnection } from "./helpers/socketHelper";
 import PrivacyPage from "components/pages/PrivacyPage";
 
 import { AnimatePresence } from 'framer-motion';
+import { motion } from "framer-motion";
 import { Suspense } from 'react';
 
 
 function App() {
   initiateSocketConnection();
+  const [showBanner, setShowBanner] = useState(true);
+
+  const handleDeny = () => {
+    localStorage.setItem('cookieConsent', 'denied');
+    setShowBanner(false);
+  };
+
+  const handleAccept = () => {
+    localStorage.setItem('cookieConsent', 'accepted');
+    setShowBanner(false);
+  };
+
+  useEffect(() => {
+    const userDecision = localStorage.getItem('cookieConsent');
+    if (userDecision === 'denied' || userDecision === 'accepted') {
+      setShowBanner(false);
+    } else {
+      setShowBanner(true);
+    }
+  }, []);
 
   return (
   <AnimatePresence>
@@ -68,17 +90,34 @@ function App() {
 
         </Routes>
       </BrowserRouter>
-      <CookieConsent
-        style={{ textAlign: "center" }}
-        debug={true}
-        buttonStyle={{ color: "white", background: "#0051d3", marginRight: "20px" }}
-        buttonText={"De acuerdo"}
-      >
-        Este sitio usa cookies. Para más información visita nuestra{" "}
-        <a href="/privacy" style={{ color: "#478dff" }}>
-          política de privacidad
-        </a>
-      </CookieConsent>
+      {showBanner && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1, delay: 2 }}
+                  transition={{
+                    ease: 'easeInOut',
+                    duration: 3,
+                    delay: 0.15,
+                  }}
+                  className="cookie-consent"
+                  style={{
+                    backgroundColor: '#0051d3',
+                    padding: '10px',
+                    color: '#ffffff',
+                    textAlign: 'center',
+                    position: 'fixed',
+                    bottom: '0',
+                    width: '100%',
+                  }}
+                >
+                  <p>
+                    Este sitio usa cookies. Para más información visita nuestra{' '}
+                    <a href="/privacy" style={{ color: '#FF7145' }}>política de privacidad</a>
+                  </p>
+                  <button onClick={handleDeny}>Denegar</button>
+                  <button onClick={handleAccept}>Aceptar</button>
+                </motion.div>
+              )}
       </Suspense>
     </ThemeProvider>
   </AnimatePresence>
