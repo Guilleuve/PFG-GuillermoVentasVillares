@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import fs from "fs";
+import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import multer from "multer";
@@ -12,7 +13,7 @@ import comments from "./routes/comments.js";
 import messages from "./routes/messages.js";
 import posts from "./routes/posts.js";
 import users from "./routes/users.js";
-import { verifyEmail, verifyPass } from "./controllers/userControllers.js";
+import { verifyEmail } from "./controllers/userControllers.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -20,8 +21,22 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 const app = express();
 app.use(express.json());
-
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(morgan("common"));
+//app.use(bodyParser.json({ limit: "30mb", extended: true }));
+//app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+
+const corsOptions = {
+  origin: 'https://cooltrainer-2cb4079caab8.herokuapp.com',
+  optionsSuccessStatus: 200 // Algunos navegadores antiguos (por ejemplo, IE11) requieren explícitamente que se devuelva un código de estado 200 para que acepten la respuesta de una solicitud CORS.
+};
+
+app.use(cors(corsOptions));
+//app.use(morgan("common"));
+//app.use(bodyParser.json({ limit: "30mb", extended: true }));
+//app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -77,7 +92,7 @@ app.use("/api/users", users);
 app.use("/api/comments", comments);
 app.use("/api/messages", messages);
 app.get('/verify-email', verifyEmail);
-app.get('/verify-pass', verifyPass);
+
 
 if (process.env.NODE_ENV == "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
