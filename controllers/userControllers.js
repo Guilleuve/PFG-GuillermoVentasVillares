@@ -5,7 +5,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import Follow from "../models/Follow.js";
+import EmailVerification from "../models/EmailVerification.js";
 import paginate from "../util/paginate.js";
+import { BASE_URL } from "../config.js";
+import nodemailer from 'nodemailer';
+import Conversation from "../models/Conversation.js";
+
 
 const getUserDict = (token, user) => {
   return {
@@ -74,8 +79,159 @@ const register = async (req, res) => {
 
     const token = jwt.sign(buildToken(user), process.env.TOKEN_KEY);
 
+    // Generar token de verificación
+    const verificationToken = jwt.sign({ userId: user._id }, process.env.TOKEN_KEY, { expiresIn: '1d' });
+
+    // Guardar el token de verificación en la base de datos
+    await EmailVerification.create({
+      userId: user._id,
+      token: verificationToken,
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 horas de expiración
+    });
+    
+
+    // Enviar correo electrónico de verificación
+    const verificationLink = `${BASE_URL}verify-email?token=${verificationToken}`;
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'noreply.cooltrainer@gmail.com',
+        pass: process.env.MAILPASS,
+  },
+    });
+
+    await transporter.sendMail({
+      from: 'noreply.cooltrainer@gmail.com',
+      to: user.email,
+      subject: 'Verificación de correo electrónico',
+      text: `Haz clic en el siguiente enlace para verificar tu correo electrónico: ${verificationLink}`,
+      html: `Haz clic <a href="${verificationLink}">aquí</a> para verificar tu correo electrónico.`,
+    });
+
     return res.json(getUserDict(token, user));
   } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+};
+
+const sendPass = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Generar token de verificación
+    const verificationToken = jwt.sign({ userId: user._id }, process.env.TOKEN_KEY, { expiresIn: '1d' });
+
+    // Guardar el token de verificación en la base de datos
+    await ResetingPassword.create({
+      userId: user._id,
+      token: verificationToken,
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 horas de expiración
+    });
+    
+    // Enviar correo electrónico de verificación
+    const verificationLink = `${BASE_URL}reseting-password?token=${verificationToken}`;
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'noreply.cooltrainer@gmail.com',
+        pass: process.env.MAILPASS,
+  },
+    });
+
+    await transporter.sendMail({
+      from: 'noreply.cooltrainer@gmail.com',
+      to: user.email,
+      subject: 'Resetear contraseña',
+      text: `Haz clic en el siguiente enlace para cambiar tu contraseña: ${verificationLink}`,
+      html: `Haz clic <a href="${verificationLink}">aquí</a> para cambiar tu contraseña.`,
+    });
+
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+};
+
+const verifyPass = async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    // Buscar el token de verificación en la base de datos
+    const verification = await ResetingPassword.findOne({ token: token });
+
+    if (!verification) {
+      throw new Error('Token de verificación inválido o expirado.');
+    }
+
+    // Verificar si el token ha expirado
+    if (verification.expiresAt < Date.now()) {
+      throw new Error('Token de verificación expirado.');
+    }
+
+    // Obtener el ID del usuario asociado con el token de verificación
+    const userId = verification.userId;
+
+    // Eliminar el token de verificación de la base de datos
+    await ResetingPassword.findByIdAndDelete(verification._id);
+
+    return res.status(200).json({ userId });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err.message });
+  }
+};
+
+const resetPass = async (req, res) => {
+  try {
+    const { userId, password } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("Usuario no existe");
+    }
+
+    // Actualizar la contraseña del usuario
+    user.password = password;
+
+    await user.save();
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+};
+
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    // Buscar el token de verificación en la base de datos
+    const verification = await EmailVerification.findOne({ token: token });
+
+    if (!verification) {
+      throw new Error('Token de verificación inválido o expirado.');
+    }
+
+    // Verificar si el token ha expirado
+    if (verification.expiresAt < Date.now()) {
+      throw new Error('Token de verificación expirado.');
+    }
+
+    // Actualizar el campo "verified" del usuario en la base de datos
+    await User.findByIdAndUpdate(verification.userId, { verified: true });
+
+    // Eliminar el token de verificación de la base de datos
+    await EmailVerification.findByIdAndDelete(verification._id);
+
+    return res.status(200).send('¡Tu correo electrónico ha sido verificado exitosamente!');
+  } catch (err) {
+    console.log(err);
     return res.status(400).json({ error: err.message });
   }
 };
@@ -96,6 +252,10 @@ const login = async (req, res) => {
       throw new Error("Email o contraseña incorrectos");
     }
 
+    if (user.verified == false){
+      throw new Error("Debes verificar el email");
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -113,8 +273,9 @@ const login = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { userId, biography } = req.body;
-    //const { location, experto, intermedio, principiante } = req.body;
+    const { userId, biography, location, experto, intermedio, principiante } = req.body;
+
+    console.log(userId, biography, location, experto, intermedio, principiante);
 
     const user = await User.findById(userId);
 
@@ -122,19 +283,44 @@ const updateUser = async (req, res) => {
       throw new Error("Usuario no existe");
     }
 
-    if (typeof biography == "string") {
-      user.biography = biography;
-    }
- 
-    console.log(biography)
-    /*
+    user.biography = biography;
     user.location = location;
     user.experto = experto;
     user.intermedio = intermedio;
     user.principiante = principiante;
-    */
 
-    await user.save();
+    await User.updateOne({ _id: userId }, user);
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    console.log(userId);
+    
+    await User.findByIdAndRemove(userId);
+
+    await Post.deleteMany({ poster: userId });
+
+    await PostJoin.deleteMany({ userId: userId });
+
+    await PostLike.deleteMany({ userId: userId });
+
+    await Message.deleteMany({ sender: userId });
+
+    await Follow.deleteMany({ followerId: userId });
+
+    await Follow.deleteMany({ followedId: userId });
+
+    await Conversation.deleteMany({ recipients: userId });
+
+    await Comment.deleteMany({ commenter: userId });
+
 
     return res.status(200).json({ success: true });
   } catch (err) {
@@ -302,7 +488,7 @@ const getRandomUsers = async (req, res) => {
   try {
     let { size } = req.query;
 
-    const users = await User.find().select("-password");
+    const users = await User.find({ verified: true }).select("-password");
 
     const randomUsers = [];
 
@@ -338,7 +524,11 @@ const getRandomIndices = (size, sourceSize) => {
 
 export{
   register,
+  verifyEmail,
   login,
+  sendPass,
+  verifyPass,
+  resetPass,
   follow,
   unfollow,
   getFollowers,
@@ -347,4 +537,5 @@ export{
   getUser,
   getRandomUsers,
   updateUser,
+  deleteUser,
 };

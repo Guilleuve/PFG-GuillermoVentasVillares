@@ -70,6 +70,21 @@ const getPost = async (postId, token) => {
   }
 };
 
+const informPost = async (postId, userId, motivo, comentario) => {
+  try {
+    const res = await fetch(BASE_URL + "api/posts/inform", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json" // Especifica el tipo de contenido como JSON
+      },
+      body: JSON.stringify({ postId, userId, motivo, comentario }) // Convierte el objeto en JSON
+    });
+    return res.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const createPost = async (post, user) => {
   try {
     const res = await fetch(BASE_URL + "api/posts", {
@@ -249,6 +264,7 @@ const unlikePost = async (postId, user) => {
 
 export {
   getPost,
+  informPost,
   createPost,
   updatePost,
   deletePost,

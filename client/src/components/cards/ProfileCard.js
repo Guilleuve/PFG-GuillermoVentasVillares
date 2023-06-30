@@ -13,7 +13,7 @@ import Alert from '@mui/material/Alert';
 import FormControl from '@mui/material/FormControl';
 import Grid from "@mui/material/Grid";
 import { Box } from "@mui/system";
-import { getUser, updateUser } from "api/users";
+import { deleteUser, getUser, updateUser } from "api/users";
 import ErrorAlert from "components/_more_components/ErrorAlert";
 import { BASE_URL } from "config";
 import { motion } from "framer-motion";
@@ -87,7 +87,7 @@ const ProfileCard = (props) => {
 
     const { DENOMINACION, PROVINCIA, COMUNIDAD_AUTONOMA } = value.value;
     // Se crea una cadena de texto con el formato deseado
-    setLocationString (`${DENOMINACION}, ${PROVINCIA} - ${COMUNIDAD_AUTONOMA}`);
+    setLocationString (`${COMUNIDAD_AUTONOMA} - ${PROVINCIA} - ${DENOMINACION}`);
   }
 
   const handleSelectChangeExperto = (event, values) => {
@@ -115,14 +115,8 @@ const ProfileCard = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(user._id, bio, location, selectedValuesExperto, selectedValuesIntermedio, selectedValuesPrincipiante);
-    // Llamar a la función updateUser con los datos actualizados
-    await updateUser(user, {
-      userId: user.userId,
-      biography: bio,
-      
-    });
-    //window.location.reload();
+    await updateUser(user._id, bio, locationString, selectedValuesExperto, selectedValuesIntermedio, selectedValuesPrincipiante);
+    window.location.reload();
   };
 
   const fetchUser = async () => {
@@ -142,24 +136,49 @@ const ProfileCard = (props) => {
       if (user) {
 
       setBio(user.biography);
-      if (Array.isArray(user.experto)) {
-        setExp([...user.experto]); // Copiar elementos del arreglo en nuevo arreglo
+      
+      const selectedOption = options.find(option => option.label === user.location);
+
+      if (selectedOption) {
+        setLocation(selectedOption);
+        setLocationString(selectedOption)
       } else {
-        setExp([user.experto]); // Si no es un arreglo, asignar como un arreglo de un solo elemento
+        // Aquí puedes manejar el caso en el que la opción no coincide con ninguna de las disponibles
+      }
+
+      if (Array.isArray(user.experto)) {
+        const options = user.experto.map((item) => ({
+          label: item,
+          value: item
+        }));
+        setSelectedValuesExperto(options);
+        setExperto(options);
+      } else {
+        setExperto([user.experto]); 
       }
       
       // Verificar si data.intermedio es un arreglo
       if (Array.isArray(user.intermedio)) {
-        setInter([...user.intermedio]); // Copiar elementos del arreglo en nuevo arreglo
+        const options = user.intermedio.map((item) => ({
+          label: item,
+          value: item
+        }));
+        setSelectedValuesIntermedio(options);
+        setIntermedio(options);
       } else {
-        setInter([user.intermedio]); // Si no es un arreglo, asignar como un arreglo de un solo elemento
+        setIntermedio([user.intermedio]);
       }
       
       // Verificar si data.principiante es un arreglo
       if (Array.isArray(user.principiante)) {
-        setPrinc([...user.principiante]); // Copiar elementos del arreglo en nuevo arreglo
+        const options = user.principiante.map((item) => ({
+          label: item,
+          value: item
+        }));
+        setSelectedValuesPrincipiante(options);
+        setPrincipiante(options);
       } else {
-        setPrinc([user.principiante]); // Si no es un arreglo, asignar como un arreglo de un solo elemento
+        setPrincipiante([user.principiante]);
       }
       }
     }
@@ -171,7 +190,9 @@ const ProfileCard = (props) => {
   };
 
   const handleDeleteAccount = async () => {
-
+    deleteUser(user._id);
+    logoutUser();
+    navigate("/");
   };
 
 
@@ -279,9 +300,31 @@ const ProfileCard = (props) => {
         <Loading label="Loading profile" />
       )}
       </Card>
-  
+                
       {isEditing && (
-         <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+        <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <HorizontalStack
+              style={{
+                backgroundColor: '#fff',
+                padding: '20px',
+                borderRadius: '5px',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '300px', 
+              }}
+            >
           <Box component="form" onSubmit={handleSubmit}>
           <Box pt={1} sx={{ width: '100%' }}>
           <FormControl fullWidth sx={{ gridColumn: "span 6" }}>
@@ -291,7 +334,6 @@ const ProfileCard = (props) => {
               renderInput={(params) => <TextField {...params} label="Ubicación" />}
               value={location}
               onChange={handleSelectChangeLocation}
-              
             />
           </FormControl>
           </Box>
@@ -387,7 +429,7 @@ const ProfileCard = (props) => {
         <Grid item xs={12} sm={12}>
           <Typography
             variant="body1"
-            sx={{ whiteSpace: "nowrap", margin: "0 8px" }}
+            sx={{ margin: "0 8px" }}
           >
             ¿Desea eliminar su cuenta permanentemente?
           </Typography>
@@ -411,7 +453,8 @@ const ProfileCard = (props) => {
     </Alert>
   )}
 </>
-        </Card>
+        </HorizontalStack>
+</div>
       )}
     </motion.div>
   );

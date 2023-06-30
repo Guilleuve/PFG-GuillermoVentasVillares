@@ -255,7 +255,7 @@ const PostEditorCard = () => {
           <Divider sx={{ borderColor: "white", margin: ".5rem 0" }} />
 
           <Typography  variant="h5" fontWeight="300">
-          Añade una imagen (opcional)
+          Añade una imagen (obligatorio)
           </Typography>
           <Typography  variant="subtitle"  sx={{ fontStyle: "italic" }} >
           Consejo: imagen de la ubicación de la actividad o quedada

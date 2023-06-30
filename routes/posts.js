@@ -1,7 +1,7 @@
 import express from "express";
 import { Router } from "express";
 import { verifyToken, optionallyVerifyToken } from "../middleware/auth.js";
-import {getPosts, createPost, getPost, updatePost, deletePost, joinPost, unjoinPost, likePost, unlikePost, getUserLikedPosts, getUsersJoinedPost} from "../controllers/postControllers.js";
+import {getPosts, createPost, getPost, updatePost, deletePost, joinPost, unjoinPost, likePost, unlikePost, getUserLikedPosts, getUsersJoinedPost, informPost} from "../controllers/postControllers.js";
 
 const router = express.Router();
 
@@ -11,6 +11,8 @@ router.post("/", verifyToken, createPost);
 router.get("/:id", optionallyVerifyToken, getPost);
 router.patch("/:id", verifyToken, updatePost);
 router.delete("/:id", verifyToken, deletePost);
+
+router.post("/inform", informPost);
 
 router.post("/join/:id", verifyToken, joinPost);
 router.delete("/join/:id", verifyToken, unjoinPost);

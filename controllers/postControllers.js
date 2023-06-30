@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import Comment from "../models/Comment.js";
 import PostLike from "../models/PostLike.js";
 import PostJoin from "../models/PostJoin.js";
+import PostInform from "../models/PostInform.js";
 import paginate from "../util/paginate.js";
 
 const cooldown = new Set();
@@ -274,6 +275,30 @@ const getPosts = async (req, res) => {
   }
 };
 
+const informPost = async (req, res) => {
+  try {
+    const { postId, userId, motivo, comentario } = req.body;
+
+    console.log(postId, userId, motivo, comentario);
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      throw new Error("El post no existe");
+    }
+
+    await PostInform.create({
+      postId,
+      userId,
+      motivo,
+      comentario
+    });
+
+    return res.json({ success: true });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+};
+
 const joinPost = async (req, res) => {
   try {
     const postId = req.params.id;
@@ -399,6 +424,7 @@ const unlikePost = async (req, res) => {
 export {
   getPost,
   getPosts,
+  informPost,
   createPost,
   updatePost,
   deletePost,

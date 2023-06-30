@@ -13,7 +13,7 @@ import comments from "./routes/comments.js";
 import messages from "./routes/messages.js";
 import posts from "./routes/posts.js";
 import users from "./routes/users.js";
-
+import { verifyEmail, verifyPass } from "./controllers/userControllers.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -86,7 +86,8 @@ app.use("/api/posts", posts);
 app.use("/api/users", users);
 app.use("/api/comments", comments);
 app.use("/api/messages", messages);
-
+app.get('/verify-email', verifyEmail);
+app.get('/verify-pass', verifyPass);
 
 if (process.env.NODE_ENV == "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));

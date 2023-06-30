@@ -26,9 +26,7 @@ const Message = (props) => {
       justifyContent={styles.justifyContent}
       alignItems="flex-end"
     >
-      {message.direction === "to" && (
-        <UserImage username={props.conservant.picturePath} size={30} />
-      )}
+      
 
       <Card
         sx={{

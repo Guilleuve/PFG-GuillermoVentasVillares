@@ -1,22 +1,29 @@
 import TextsmsIcon from '@mui/icons-material/Textsms';
 import {
   Card,
+  Divider,
   IconButton,
   Typography,
   useTheme,
 } from "@mui/material";
+import { FormControl, Checkbox,
+  FormControlLabel,
+  FormGroup,
+  FormLabel, TextField, Button } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { Box } from "@mui/system";
 import { BASE_URL } from "config";
 import { useState } from "react";
 import { AiFillCheckCircle, AiFillEdit } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { deletePost, joinPost, likePost, unjoinPost, unlikePost, updatePost } from "../../api/posts";
+import { deletePost, informPost, joinPost, likePost, unjoinPost, unlikePost, updatePost } from "../../api/posts";
 import { isLoggedIn } from "../../helpers/authHelper";
 import ContentDetails from "./ContentDetails";
 
 import HorizontalStack from "../_more_components/HorizontalStack";
 import LikeBox from "../_more_components/LikeBox";
 import PostContentBox from "./PostContentBox";
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { } from "react-icons/ai";
 import Markdown from "../_more_components/Markdown";
@@ -44,6 +51,10 @@ const PostCard = (props) => {
   const [post, setPost] = useState(postData);
   const [joinCount, setJoinCount] = useState(post.joinCount);
   const [likeCount, setLikeCount] = useState(post.likeCount);
+
+  const [selectedReason, setSelectedReason] = useState('');
+  const [comment, setComment] = useState('');
+  const [showReport, setShowReport] = useState(false);
 
 
   let maxHeight = null;
@@ -101,6 +112,19 @@ const PostCard = (props) => {
       setLikeCount(likeCount - 1);
       await unlikePost(post._id, user);
     }
+  };
+
+  const handleReasonChange = (event) => {
+    setSelectedReason(event.target.value);
+  };
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+
+  const handleSubmitReport = () => {
+    setShowReport(false)
+    informPost(post._id, user.userId, selectedReason, comment);
   };
 
   return (
@@ -213,8 +237,112 @@ const PostCard = (props) => {
             <Typography>
               {post.commentCount}
             </Typography>
+
+            { preview !== "secondary" && (
+            <div style={{ marginLeft: 'auto' }}>
+              <IconButton sx={{ padding: 1 }}>
+                <WarningAmberIcon onClick={() => setShowReport(true)} />
+              </IconButton>
+            </div>
+            )}
             </HorizontalStack>
             
+            { showReport && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+          }}>
+            <HorizontalStack
+              style={{
+                backgroundColor: '#fff',
+                padding: '20px',
+                borderRadius: '5px',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+                          <IconButton sx={{ padding: 1 }}>
+                <CloseIcon onClick={() => setShowReport(false)} />
+              </IconButton>
+           <FormControl component="fieldset" sx={{ marginBottom: '10px' }}>
+                  <FormLabel component="legend">Motivo</FormLabel>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedReason === 'contenido_violento'}
+                          onChange={handleReasonChange}
+                          value="contenido_violento"
+                        />
+                      }
+                      label="Contenido violento"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedReason === 'incitacion_odio'}
+                          onChange={handleReasonChange}
+                          value="incitacion_odio"
+                        />
+                      }
+                      label="Incitación al odio"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedReason === 'actividades_daninas'}
+                          onChange={handleReasonChange}
+                          value="actividades_daninas"
+                        />
+                      }
+                      label="Actividades dañinas o peligrosas"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedReason === 'engañoso_fraudulento'}
+                          onChange={handleReasonChange}
+                          value="engañoso_fraudulento"
+                          />
+                        }
+                        label="Engañoso o fraudulento"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={selectedReason === 'contenido_sexual'}
+                            onChange={handleReasonChange}
+                            value="contenido_sexual"
+                          />
+                        }
+                        label="Contenido sexual"
+                      />
+                    </FormGroup>
+                  </FormControl>
+                  <Divider sx={{  padding: 1, backgroundColor: '#fff' }} />
+              <TextField
+                id="report-comment"
+                label="Comentario adicional"
+                multiline
+                rows={4}
+                value={comment}
+                onChange={handleCommentChange}
+                sx={{ marginTop: '20px' }}
+              />
+              <Divider sx={{  padding: 1, backgroundColor: '#fff'  }} />
+              <Button  variant="contained" onClick={handleSubmitReport}>Reportar</Button>
+            </HorizontalStack>
+            </div>
+            )}
       </Box>
     </Card>
     </motion.div>

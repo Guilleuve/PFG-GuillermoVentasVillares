@@ -15,7 +15,9 @@ import {
   Routes,
 } from "react-router-dom";
 import theme from "./theme";
-
+import VerifyEmail from "components/pages/VerifyEmail";
+import ResetPassword from "components/pages/ResetPassword";
+import ResetingPassword from "components/pages/ResetingPassword";
 import HomePage from "components/pages/HomePage";
 import PostWidget from "components/pages/PostPage";
 import ProfilePage from "components/pages/ProfilePage";
@@ -82,6 +84,9 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/verify-email" element={<VerifyEmail/>} />
+          <Route path="/reset-password" element={<ResetPassword/>} />
+          <Route path="/reseting-password" element={<ResetingPassword/>} />
           <Route path="/search" element={<SearchView />} />
           <Route path="/users/:id" element={<ProfilePage />} />
           <Route path="/login" element={<Login />} />

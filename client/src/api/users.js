@@ -32,6 +32,37 @@ const login = async (user) => {
   }
 };
 
+const sendPass = async (email) => {
+  try {
+    const res = await fetch(BASE_URL + "api/users/sendPass", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+    return await res.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const resetPass = async (userId, password) => {
+  try {
+    const res = await fetch(BASE_URL + "api/users/reset-password", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json" 
+      },
+      body: JSON.stringify({ userId, password })
+    });
+    return res.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const getUser = async (params) => {
   try {
     const res = await fetch(BASE_URL + "api/users/" + params.id);
@@ -52,16 +83,29 @@ const getRandomUsers = async (query) => {
   }
 };
 
-const updateUser = async (user, data) => {
+const updateUser = async (userId, biography, location, experto, intermedio, principiante) => {
   try {
-    const res = await fetch(BASE_URL + "api/users/" + user._id, {
+    const res = await fetch(BASE_URL + "api/users/update", {
       method: "PATCH",
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "x-access-token": user.token,
+        "Content-Type": "application/json" 
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ userId, biography, location, experto, intermedio, principiante })
+    });
+    return res.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deleteUser = async (userId) => {
+  try {
+    const res = await fetch(BASE_URL + "api/users/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json" 
+      },
+      body: JSON.stringify({ userId })
     });
     return res.json();
   } catch (err) {
@@ -156,4 +200,4 @@ const isFollowing = async (followerId, followedId) => {
   }
 };
 
-export { register, login, getUser, getRandomUsers, updateUser, follow, unfollow, getFollowers, getFollowing, isFollowing };
+export { register, login, sendPass, resetPass, getUser, getRandomUsers, updateUser, deleteUser, follow, unfollow, getFollowers, getFollowing, isFollowing };

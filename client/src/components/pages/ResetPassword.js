@@ -8,17 +8,17 @@ import {
 import { Box } from "@mui/system";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../../api/users";
+import { login, sendPass } from "../../api/users";
 import { loginUser } from "../../helpers/authHelper";
 import Copyright from "../_more_components/Copyright";
 import ErrorAlert from "../_more_components/ErrorAlert";
 
-const LoginPage = () => {
+const ResetPassword = () => {
   const navigate = useNavigate();
+  const [renderVerif, setRenderVerif] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
   });
 
   const [serverError, setServerError] = useState("");
@@ -30,12 +30,13 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = await login(formData);
+    console.log(formData.email);
+
+    const data = await sendPass(formData.email);
     if (data.error) {
       setServerError(data.error);
     } else {
-      loginUser(data);
-      navigate("/");
+      setRenderVerif(true);
     }
   };
 
@@ -48,10 +49,7 @@ const LoginPage = () => {
           </Link>
         </Typography>
         <Typography variant="h5" gutterBottom>
-          Iniciar sesión
-        </Typography>
-        <Typography color="text.secondary">
-          ¿No tienes cuenta? <Link to="/register">Registrate aquí</Link>
+          Resetear contraseña
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
@@ -65,31 +63,27 @@ const LoginPage = () => {
             name="email"
             onChange={handleChange}
           />
-          <TextField
-            label="Contraseña"
-            fullWidth
-            required
-            margin="normal"
-            id="password  "
-            name="password"
-            onChange={handleChange}
-            type="password"
-          />
-
+         
           <ErrorAlert error={serverError} />
           <Button type="submit" fullWidth variant="contained" sx={{ my: 2 }}>
-            Iniciar sesión
+            Resetear contraseña
           </Button>
-          <Typography color="text.secondary">
-          ¿Has olvidado tu contraseña? <Link to="/reset-password">click aquí</Link>
-        </Typography>
+         
         </Box>
         <Box sx={{ mt: 3 }}>
           <Copyright />
         </Box>
       </Stack>
+      {renderVerif && (
+        <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '5px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)', zIndex: '9999' }}>
+          <p style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold' }}>
+            Se ha enviado un mensaje a su dirección de correo electrónico para verificar su identidad
+          </p>
+          <p style={{ textAlign: 'center', fontSize: '20px' }}>Puede cerrar esta pestaña</p>
+        </div>
+      )}
     </Container>
   );
 };
 
-export default LoginPage;
+export default ResetPassword;

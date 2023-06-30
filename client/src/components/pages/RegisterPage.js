@@ -24,6 +24,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState("");
   const [errors, setErrors] = useState({});
+  const [renderVerif, setRenderVerif] = useState(false);
 
   const [location, setLocation] = useState(null); 
   const [locationString, setLocationString] = useState(null); 
@@ -80,7 +81,7 @@ const RegisterPage = () => {
 
     const { DENOMINACION, PROVINCIA, COMUNIDAD_AUTONOMA } = value.value;
     // Se crea una cadena de texto con el formato deseado
-    setLocationString (`${DENOMINACION}, ${PROVINCIA} - ${COMUNIDAD_AUTONOMA}`);
+    setLocationString (`${COMUNIDAD_AUTONOMA} - ${PROVINCIA} - ${DENOMINACION}`);
   }
 
   const handleSelectChangeExperto = (event, values) => {
@@ -135,6 +136,9 @@ const RegisterPage = () => {
     formData.experto = selectedValuesExperto;
     formData.intermedio = selectedValuesIntermedio;
     formData.principiante = selectedValuesPrincipiante;
+    if (!file || !file.name) {
+      throw new Error('Debe subir una imagen de perfil.');
+    }
     formData.picturePath =  date + "-" + hours + "-" + file.name;
     
     const data = await register(formData);
@@ -142,8 +146,7 @@ const RegisterPage = () => {
     if (data.error) {
       setServerError(data.error);
     } else {
-      loginUser(data);
-      navigate("/");
+      setRenderVerif(true);
     }
   };
 
@@ -328,6 +331,14 @@ const RegisterPage = () => {
         </Box>
       </Stack>
       </Formik>
+      {renderVerif && (
+        <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '5px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)', zIndex: '9999' }}>
+          <p style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold' }}>
+            Se ha enviado un mensaje a su dirección de correo electrónico para verificar su identidad
+          </p>
+          <p style={{ textAlign: 'center', fontSize: '20px' }}>Puede cerrar esta pestaña</p>
+        </div>
+      )}
     </Container>
   );
 };
