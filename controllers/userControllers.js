@@ -96,7 +96,7 @@ const register = async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'noreply.cooltrainer@gmail.com',
-        pass: process.env.MAILPASS,
+        pass: 'gzbxrjqdywhcoarh',
   },
     });
 
@@ -140,7 +140,7 @@ const sendPass = async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'noreply.cooltrainer@gmail.com',
-        pass: process.env.MAILPASS,
+        pass: 'gzbxrjqdywhcoarh',
   },
     });
 
