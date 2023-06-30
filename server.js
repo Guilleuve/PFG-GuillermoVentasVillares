@@ -16,7 +16,7 @@ import users from "./routes/users.js";
 import { verifyEmail, verifyPass } from "./controllers/userControllers.js";
 
 app.use((req, res, next) => {
-  res.setHeader('Content-Security-Policy', "default-src 'self'; connect-src <URL>");
+  res.setHeader('Content-Security-Policy', "default-src 'self'; connect-src https://cooltrainer-2cb4079caab8.herokuapp.com/");
   next();
 });
 
