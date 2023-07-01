@@ -1,4 +1,4 @@
-let BASE_URL = "https://cooltrainer-2cb4079caab8.herokuapp.com/";
+let BASE_URL = "https://cooltrainer.herokuapp.com/";
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   BASE_URL = "http://localhost:3000/";
 }
