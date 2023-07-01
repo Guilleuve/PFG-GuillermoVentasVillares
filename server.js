@@ -13,7 +13,7 @@ import comments from "./routes/comments.js";
 import messages from "./routes/messages.js";
 import posts from "./routes/posts.js";
 import users from "./routes/users.js";
-import { verifyEmail } from "./controllers/userControllers.js";
+
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -26,14 +26,9 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 //app.use(bodyParser.json({ limit: "30mb", extended: true }));
 //app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-const corsOptions = {
-  origin: 'https://cooltrainer-2cb4079caab8.herokuapp.com',
-  optionsSuccessStatus: 200 // Algunos navegadores antiguos (por ejemplo, IE11) requieren explícitamente que se devuelva un código de estado 200 para que acepten la respuesta de una solicitud CORS.
-};
-
-app.use(cors(corsOptions));
 //app.use(morgan("common"));
 //app.use(bodyParser.json({ limit: "30mb", extended: true }));
 //app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
@@ -91,7 +86,6 @@ app.use("/api/posts", posts);
 app.use("/api/users", users);
 app.use("/api/comments", comments);
 app.use("/api/messages", messages);
-app.get('/verify-email', verifyEmail);
 
 
 if (process.env.NODE_ENV == "production") {
