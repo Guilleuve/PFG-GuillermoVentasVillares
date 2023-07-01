@@ -27,7 +27,7 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-      "connect-src": ["'self'", "https://cooltrainer-2cb4079caab8.herokuapp.com/"],
+      "connect-src": ["'self'", "www.cooltrainer.com/"],
     },
   })
 );
