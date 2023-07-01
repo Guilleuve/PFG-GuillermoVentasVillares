@@ -23,6 +23,14 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "connect-src": ["'self'", "https://cooltrainer.herokuapp.com"],
+    },
+  })
+);
 app.use(morgan("common"));
 //app.use(bodyParser.json({ limit: "30mb", extended: true }));
 //app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
