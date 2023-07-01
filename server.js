@@ -25,7 +25,9 @@ app.use(express.json());
 //app.use(bodyParser.json({ limit: "30mb", extended: true }));
 //app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-
+app.use(cors({
+  origin: "https://cooltrainer-2cb4079caab8.herokuapp.com"
+}));
 //app.use(morgan("common"));
 //app.use(bodyParser.json({ limit: "30mb", extended: true }));
 //app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
