@@ -13,6 +13,7 @@ import comments from "./routes/comments.js";
 import messages from "./routes/messages.js";
 import posts from "./routes/posts.js";
 import users from "./routes/users.js";
+import { resetPass, verifyEmail } from "./controllers/userControllers.js";
 
 
 /* CONFIGURATIONS */
@@ -86,6 +87,8 @@ app.use("/api/posts", posts);
 app.use("/api/users", users);
 app.use("/api/comments", comments);
 app.use("/api/messages", messages);
+app.use("/verify-email", verifyEmail);
+app.use("/reset-pass", resetPass);
 
 
 if (process.env.NODE_ENV == "production") {
