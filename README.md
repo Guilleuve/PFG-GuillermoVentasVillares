@@ -2,6 +2,9 @@
 Proyecto web "MERN" del PFG de Guillermo Ventas Villares
 
 ![ezgif-2-ae5452c597](https://github.com/Guilleuve/PFG-GuillermoVentasVillares/assets/56960692/e7a7c335-d0c6-4179-8405-f0a89c6a9ae2)
+------------------------------------------------------------------------------------------------------------------------------------
+![image](https://github.com/Guilleuve/PFG-GuillermoVentasVillares/assets/56960692/64cee26b-7b27-448f-83d3-8465ada21e27)
+------------------------------------------------------------------------------------------------------------------------------------
 
 
 Necesario tener instalado NodeJS https://nodejs.org/en/download
