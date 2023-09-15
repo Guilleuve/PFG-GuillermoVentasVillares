@@ -1,6 +1,5 @@
 ﻿# cooltrainer.
 Proyecto web "MERN" del PFG de Guillermo Ventas Villares
-https://drive.google.com/file/d/18brwa5XfW_lse-MwjoxX6C1h0fa18i4t/view?usp=sharing
 
 ![ezgif-2-ae5452c597](https://github.com/Guilleuve/PFG-GuillermoVentasVillares/assets/56960692/e7a7c335-d0c6-4179-8405-f0a89c6a9ae2)
 ## Registro Login
@@ -15,6 +14,9 @@ https://drive.google.com/file/d/18brwa5XfW_lse-MwjoxX6C1h0fa18i4t/view?usp=shari
 ![ezgif-4-7e55f44571](https://github.com/Guilleuve/PFG-GuillermoVentasVillares/assets/56960692/dda04a08-2b20-4e2b-821e-df28c6798cae)
 ## Publicar actividad
 ![ezgif-4-da63ff3d6a](https://github.com/Guilleuve/PFG-GuillermoVentasVillares/assets/56960692/2a88cca5-6341-42da-bb18-ce803cc234be)
+
+Memoria:
+https://drive.google.com/file/d/18brwa5XfW_lse-MwjoxX6C1h0fa18i4t/view?usp=sharing
 
 ## INSTALACIÓN
 
